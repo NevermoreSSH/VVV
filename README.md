@@ -49,6 +49,7 @@
 ### STATUS
 `Beta Testing`
 - Bug delete config (need manual delete)
+- Bug Squid (already OFF)
 
 ### Credits
 - [Dharak36](https://github.com/dharak36/Xray-core)
