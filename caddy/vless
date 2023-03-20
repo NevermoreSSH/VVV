@@ -1,0 +1,15 @@
+
+@ws_path {
+path /worryfree
+path /xray
+path /nevermoressh
+path /*
+
+}
+
+
+handle @ws_path {
+    uri path_regexp /.* /
+    reverse_proxy localhost:10001
+}
+
