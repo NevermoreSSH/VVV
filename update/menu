@@ -177,7 +177,7 @@ case $menu in
     get-domain
     ;;
 12)
-    nano /etc/banner
+    nano /etc/issue.net
     ;;
 13)
     seres
