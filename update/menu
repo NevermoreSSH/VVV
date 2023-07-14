@@ -1,0 +1,197 @@
+#!/bin/bash
+# //====================================================
+# //	System Request:Debian 9+/Ubuntu 18.04+/20+
+# //	Author:	elliez667
+# //	Dscription: Xray Menu Management
+# //	email: elliez667@gmail.com
+# //  telegram: https://t.me/todfix667
+# //====================================================
+# // font color configuration | AUTOSCRIPT BY NEVERMORESSH
+# COLOR VALIDATION
+clear
+RED='\033[0;31m'
+NC='\033[0m'
+gray="\e[1;30m"
+Blue="\033[0m"
+GREEN='\033[0m'
+grenbo="\e[92;1m"
+YELL='\033[0;33m'
+ISP=$(cat /etc/xray/isp)
+NS=$(cat /etc/xray/dns)
+CITY=$(cat /etc/xray/city)
+IPVPS=$(curl -s ipv4.icanhazip.com)
+domain=$(cat /etc/xray/domain)
+RAM=$(free -m | awk 'NR==2 {print $2}')
+USAGERAM=$(free -m | awk 'NR==2 {print $3}')
+MEMOFREE=$(printf '%-1s' "$(free -m | awk 'NR==2{printf "%.2f%%", $3*100/$2 }')")
+LOADCPU=$(printf '%-0.00001s' "$(top -bn1 | awk '/Cpu/ { cpu = "" 100 - $8 "%" }; END { print cpu }')")
+MODEL=$(cat /etc/os-release | grep -w PRETTY_NAME | head -n1 | sed 's/=//g' | sed 's/"//g' | sed 's/PRETTY_NAME//g')
+CORE=$(printf '%-1s' "$(grep -c cpu[0-9] /proc/stat)")
+Exp="Lifetime"
+Name="NevermoreSSH AIO"
+# Total BANDWIDTH
+dtoday="$(vnstat -i eth0 | grep "today" | awk '{print $2" "substr ($3, 1, 1)}')"
+utoday="$(vnstat -i eth0 | grep "today" | awk '{print $5" "substr ($6, 1, 1)}')"
+ttoday="$(vnstat -i eth0 | grep "today" | awk '{print $8" "substr ($9, 1, 1)}')"
+#Download/Upload yesterday
+dyest="$(vnstat -i eth0 | grep "yesterday" | awk '{print $2" "substr ($3, 1, 1)}')"
+uyest="$(vnstat -i eth0 | grep "yesterday" | awk '{print $5" "substr ($6, 1, 1)}')"
+tyest="$(vnstat -i eth0 | grep "yesterday" | awk '{print $8" "substr ($9, 1, 1)}')"
+#Download/Upload current month
+dmon="$(vnstat -i eth0 -m | grep "$(date +"%b '%y")" | awk '{print $3" "substr ($4, 1, 1)}')"
+umon="$(vnstat -i eth0 -m | grep "$(date +"%b '%y")" | awk '{print $6" "substr ($7, 1, 1)}')"
+tmon="$(vnstat -i eth0 -m | grep "$(date +"%b '%y")" | awk '{print $9" "substr ($10, 1, 1)}')"
+DATEVPS=$(date +'%d/%m/%Y')
+TIMEZONE=$(printf '%(%H:%M:%S)T')
+SERONLINE=$(uptime -p | cut -d " " -f 2-10000)
+if [ ! -e /etc/vmess ]; then
+    mkdir -p /etc/vmess
+    touch /etc/vmess/.vmess.db
+fi
+vms=$(cat /etc/vmess/.vmess.db)
+if [[ $vms = "" ]]; then
+    vm="0"
+else
+    vm=$(cat /etc/vmess/.vmess.db | grep "###" | wc -l)
+fi
+
+if [ ! -e /etc/vless ]; then
+    mkdir -p /etc/vless
+    touch /etc/vless/.vless.db
+fi
+vms=$(cat /etc/vless/.vless.db)
+if [[ $vms = "" ]]; then
+    vl="0"
+else
+    vl=$(cat /etc/vless/.vless.db | grep "###" | wc -l)
+fi
+
+if [ ! -e /etc/trojan ]; then
+    mkdir -p /etc/trojan
+    touch /etc/trojan/.trojan.db
+fi
+vms=$(cat /etc/trojan/.trojan.db)
+if [[ $vms = "" ]]; then
+    tr="0"
+else
+    tr=$(cat /etc/trojan/.trojan.db | grep "###" | wc -l)
+fi
+if [ ! -e /etc/shadowsocks ]; then
+    mkdir -p /etc/shadowsocks
+    touch /etc/shadowsocks/.shadowsocks.db
+fi
+vms=$(cat /etc/shadowsocks/.shadowsocks.db)
+if [[ $vms = "" ]]; then
+    ss="0"
+else
+    ss=$(cat /etc/shadowsocks/.shadowsocks.db | grep "###" | wc -l)
+fi
+if [ ! -e /etc/ssh ]; then
+    mkdir -p /etc/ssh
+    touch /etc/ssh/.ssh.db
+fi
+vms=$(cat /etc/ssh/.ssh.db)
+if [[ $vms = "" ]]; then
+    ssh="0"
+else
+    ssh=$(cat /etc/ssh/.ssh.db | grep "###" | wc -l)
+fi
+clear
+echo -e "\033[1;93m──────────────────────────────────────────\033[0m"
+echo -e "\033[42m    ∆ NEVERMORESSH MANAGER COMMUNITY ∆   \033[0m"
+echo -e "\033[1;93m──────────────────────────────────────────\033[0m"
+echo -e " ${YELL}System OS${NC}     : \033[0m$MODEL${NC}"
+echo -e " ${YELL}Kernel OS ${NC}    : \033[0m$(uname -r) $NC"
+echo -e " ${YELL}Server RAM${NC}    : \033[0m$USAGERAM MB / $RAM MB $NC"
+#echo -e " ${YELL}Usage Memory${NC}  : \033[0m$MEMOFREE${NC}"
+echo -e " ${YELL}LoadCPU${NC}       : \033[0m$LOADCPU% ($CORE Core)${NC}"
+echo -e " ${YELL}Uptime Server${NC} : \033[0m$SERONLINE${NC}"
+#echo -e " ${YELL}Core System${NC}   : \033[0m$CORE${NC}"
+echo -e " ${YELL}Date${NC}          : \033[0m$DATEVPS${NC}"
+echo -e " ${YELL}Time${NC}          : \033[0m$TIMEZONE${NC}"
+#echo -e " ${YELL}Isp VPS${NC}       : \033[0m$ISP${NC}"
+#echo -e " ${YELL}City${NC}          : \033[0m$CITY${NC}"
+echo -e " ${YELL}IP VPS${NC}        : \033[0m$IPVPS${NC}"
+echo -e " ${YELL}Domain${NC}        : \033[0m$domain${NC}"
+echo -e " ${YELL}NS Domain${NC}     : \033[0m$NS${NC}"
+echo -e " ${YELL}Exp Script${NC}    : \033[0m$Exp${NC}"
+echo -e " ${YELL}Name Author${NC}   : \033[0m$Name${NC}"
+echo -e "\033[1;93m┌──────────────────────────────────────────┐\033[0m"
+echo -e "\033[1;93m│\033[0m ${RED}SSH  VMESS   VLESS  TROJAN   SHADOWSOCKS$NC"
+echo -e "\033[1;93m│\033[0m ${Blue} $ssh     $vm       $vl      $tr           $ss   $NC"
+echo -e "\033[1;93m└──────────────────────────────────────────┘\033[0m"
+echo -e "\033[1;93m┌──────────────────────────────────────────┐\033[0m"
+echo -e "\033[1;93m│\033[0m ${Blue}Daily Usage         : $ttoday $NC"
+echo -e "\033[1;93m│\033[0m ${Blue}Yesterday Usage     : $tyest $NC"
+echo -e "\033[1;93m│\033[0m ${Blue}Monthly Usage       : $tmon $NC"
+echo -e "\033[1;93m└──────────────────────────────────────────┘\033[0m"
+echo -e "\033[1;93m┌──────────────────────────────────────────┐\033[0m"
+echo -e "\033[1;93m│  ${grenbo}1.${NC} \033[0mSSH OVPN MANAGER${NC} ${grenbo}8.${NC}  \033[0mPORT VPS INFO${NC}"
+echo -e "\033[1;93m│  ${grenbo}2.${NC} \033[0mVMESS MANAGER${NC}    ${grenbo}9.${NC}  \033[0mLOAD VPS INFO${NC}"
+echo -e "\033[1;93m│  ${grenbo}3.${NC} \033[0mVLESS MANAGER${NC}    ${grenbo}10.${NC} \033[0mSPEEDTEST${NC}"
+echo -e "\033[1;93m│  ${grenbo}4.${NC} \033[0mTROJAN MANAGER${NC}   ${grenbo}11.${NC} \033[0mCHANGE DOMAIN${NC}"
+echo -e "\033[1;93m│  ${grenbo}5.${NC} \033[0mSHDWSK MANAGER${NC}   ${grenbo}12.${NC} \033[0mCHANGE BANNER${NC}"
+echo -e "\033[1;93m│  ${grenbo}6.${NC} \033[0mRUNNING SYSTEM${NC}   ${grenbo}13.${NC} \033[0mRESTART SERVICE${NC}"
+echo -e "\033[1;93m│  ${grenbo}7.${NC} \033[0mBACKUP & RESTORE${NC} ${grenbo}14.${NC} \033[0mRESTART SERVER${NC}"
+echo -e "\033[1;93m│  "
+echo -e "\033[1;93m│  ${grenbo}15.${NC} \033[0mDNS CHANGER${NC}     ${grenbo}16.${NC} \033[0mNETFLIX CHECKER${NC}"
+echo -e "\033[1;93m└──────────────────────────────────────────┘\033[0m"
+echo -e ""
+echo -e "\033[1;93m┌───────────────────────────────────────────┐\033[0m"
+echo -e "\033[1;93m│\033[0m\033[0mNEVERMORESSH${NC}(C)\033[1;94mhttps://github.com/todfix667 ${NC}\033[1;93m\033[0m"
+echo -e "\033[1;93m└───────────────────────────────────────────┘\033[0m"
+echo -e ""
+read -p "Select From Options [ 1 - 14 ] : " menu
+case $menu in
+1)
+    ssh
+    ;;
+2)
+    vmess
+    ;;
+3)
+    vless
+    ;;
+4)
+    trojan
+    ;;
+5)
+    shadowsocks
+    ;;
+6)
+    run
+    ;;
+7)
+    get-backres
+    ;;
+8)
+    portin
+    ;;
+9)
+    gotop
+    ;;
+10)
+    speedtest
+    ;;
+11)
+    get-domain
+    ;;
+12)
+    nano /etc/banner
+    ;;
+13)
+    seres
+    ;;
+14)
+    reboot
+    ;;
+15)
+    dns
+    ;;
+16)
+    netf
+    ;;
+*)
+    menu
+    ;;
+esac

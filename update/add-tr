@@ -1,0 +1,150 @@
+#!/bin/bash
+# //====================================================
+# //	System Request:Debian 9+/Ubuntu 18.04+/20+
+# //	Author:	elliez
+# //	Dscription: Xray Menu Management
+# //	email: elliez667@gmail.com
+# //  telegram: https://t.me/todfix667
+# //====================================================
+# // font color configuration | NEVERMORE SSH AUTOSCRIPT
+red() { echo -e "\\033[32;1m${*}\\033[0m"; }
+domain=$(cat /etc/xray/domain)
+PUB=$(cat /etc/slowdns/server.pub)
+CITY=$(cat /etc/xray/city)
+NS=$(cat /etc/xray/dns)
+TIMES="10"
+CHATID="-1001891259267"
+KEY="2145515560:AAE9WqfxZzQC-FYF1VUprICGNomVfv6OdTU"
+URL="https://api.telegram.org/bot$KEY/sendMessage"
+clear
+until [[ $user =~ ^[a-zA-Z0-9_]+$ && ${user_EXISTS} == '0' ]]; do
+  echo -e "\033[1;93m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+  echo -e "\e[42m        Add Xray/Trojan Account          \E[0m"
+  echo -e "\033[1;93m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+
+  read -rp "User: " -e user
+  user_EXISTS=$(grep -w $user /etc/xray/config.json | wc -l)
+
+  if [[ ${user_EXISTS} == '1' ]]; then
+    clear
+    echo -e "\033[1;93m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+    echo -e "\e[42m        Add Xray/Trojan Account          \E[0m"
+    echo -e "\033[1;93m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+    echo ""
+    echo "A client with the specified name was already created, please choose another name."
+    echo ""
+    echo -e "\033[1;93m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+    read -n 1 -s -r -p "Press any key to back on menu"
+    menu
+  fi
+done
+uuid=$(cat /proc/sys/kernel/random/uuid)
+read -p "Expired (days): " masaaktif
+read -p "Limit User (GB): " Quota
+exp=$(date -d "$masaaktif days" +"%Y-%m-%d")
+sed -i '/#trojanws$/a\#! '"$user $exp"'\
+},{"password": "'""$uuid""'","email": "'""$user""'"' /etc/xray/config.json
+sed -i '/#trojangrpc$/a\#! '"$user $exp"'\
+},{"password": "'""$uuid""'","email": "'""$user""'"' /etc/xray/config.json
+cat >/var/www/html/trojan-$user.txt <<-END
+====================================================================
+             P R O J E C T  O F  N E V E R M O R E S S H
+                       [Freedom Internet]
+====================================================================
+        https://github.com/NevermoreSSH/skywalk
+====================================================================
+              Format Trojan GO/WS (CDN)
+====================================================================
+
+- name: Trojan-$user-GO/WS (CDN)
+  server: ${domain}
+  port: 443
+  type: trojan
+  password: ${uuid}
+  network: ws
+  sni: ${domain}
+  skip-cert-verify: true
+  udp: true
+  ws-opts:
+    path: /trojan-ws
+    headers:
+        Host: ${domain}
+_______________________________________________________
+                 Format Trojan gRPC
+_______________________________________________________
+
+- name: Trojan-$user-gRPC (SNI)
+  type: trojan
+  server: ${domain}
+  port: 443
+  password: ${uuid}
+  udp: true
+  sni: ${domain}
+  skip-cert-verify: true
+  network: grpc
+  grpc-opts:
+    grpc-service-name: trojan-grpc
+
+_______________________________________________________
+              Link Trojan Account
+_______________________________________________________
+Link WS : trojan://${uuid}@${domain}:443?path=%2Ftrojan-ws&security=tls&host=${domain}&type=ws&sni=${domain}#${user}
+_______________________________________________________
+Link GRPC : trojan://${uuid}@${domain}:443?mode=gun&security=tls&type=grpc&serviceName=trojan-grpc&sni=${domain}#${user}
+_______________________________________________________
+
+
+
+END
+systemctl restart xray
+systemctl restart nginx
+service cron restart
+trojanlink="trojan://${uuid}@${domain}:443?path=%2Ftrojan-ws&security=tls&host=${domain}&type=ws&sni=${domain}#${user}"
+trojanlink1="trojan://${uuid}@${domain}:443?mode=gun&security=tls&type=grpc&serviceName=trojan-grpc&sni=${domain}#${user}"
+if [ ! -e /etc/trojan ]; then
+  mkdir -p /etc/trojan
+fi
+
+if [ -z ${Quota} ]; then
+  Quota="0"
+fi
+
+c=$(echo "${Quota}" | sed 's/[^0-9]*//g')
+d=$((${c} * 1024 * 1024 * 1024))
+
+if [[ ${c} != "0" ]]; then
+  echo "${d}" >/etc/trojan/${user}
+fi
+DATADB=$(cat /etc/trojan/.trojan.db | grep "^###" | grep -w "${user}" | awk '{print $2}')
+if [[ "${DATADB}" != '' ]]; then
+  sed -i "/\b${user}\b/d" /etc/trojan/.trojan.db
+fi
+echo "### ${user} ${exp} ${uuid}" >>/etc/trojan/.trojan.db
+curl -s --max-time $TIMES -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL
+clear
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "\e[42m    Xray/Trojan Account    \E[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "Remarks     : ${user}" | tee -a /etc/nevermoressh/user.log
+echo -e "Host        : ${domain}" | tee -a /etc/nevermoressh/user.log
+echo -e "Host Slowdns: ${NS}" | tee -a /etc/nevermoressh/user.log
+echo -e "Pub Key     : ${PUB}" | tee -a /etc/nevermoressh/user.log
+#echo -e "Location    : $CITY" | tee -a /etc/nevermoressh/user.log
+echo -e "User Quota  : ${Quota} GB" | tee -a /etc/nevermoressh/user.log
+echo -e "Port DNS    : 443, 53 " | tee -a /etc/nevermoressh/user.log
+echo -e "Port TLS    : 443" | tee -a /etc/nevermoressh/user.log
+echo -e "port        : 443" | tee -a /etc/nevermoressh/user.log
+echo -e "Key         : ${uuid}" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "Link WS    : ${trojanlink}" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "Link GRPC  : ${trojanlink1}" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "Format OpenClash : https://${domain}:81/trojan-$user.txt" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "Expired On : $exp" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "" | tee -a /etc/nevermoressh/user.log
+read -n 1 -s -r -p "Press any key to back on menu"
+
+menu

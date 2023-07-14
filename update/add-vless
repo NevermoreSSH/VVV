@@ -1,0 +1,203 @@
+#!/bin/bash
+# //====================================================
+# //	System Request:Debian 9+/Ubuntu 18.04+/20+
+# //	Author:	elliez
+# //	Dscription: Xray Menu Management
+# //	email: elliez667@gmail.com
+# //  telegram: https://t.me/todfix667
+# //====================================================
+# // font color configuration | NEVERMORE SSH AUTOSCRIPT
+red() { echo -e "\\033[32;1m${*}\\033[0m"; }
+domain=$(cat /etc/xray/domain)
+PUB=$(cat /etc/slowdns/server.pub)
+CITY=$(cat /etc/xray/city)
+NS=$(cat /etc/xray/dns)
+TIMES="10"
+CHATID="-1001891259267"
+KEY="2145515560:AAE9WqfxZzQC-FYF1VUprICGNomVfv6OdTU"
+URL="https://api.telegram.org/bot$KEY/sendMessage"
+clear
+until [[ $user =~ ^[a-zA-Z0-9_]+$ && ${CLIENT_EXISTS} == '0' ]]; do
+  echo -e "\033[1;93m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+  echo -e "\e[42m         Add Xray/Vless Account          \E[0m"
+  echo -e "\033[1;93m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+
+  read -rp "User: " -e user
+  CLIENT_EXISTS=$(grep -w $user /etc/xray/config.json | wc -l)
+
+  if [[ ${CLIENT_EXISTS} == '1' ]]; then
+    clear
+    echo -e "\033[1;93m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+    echo -e "\e[42m         Add Xray/Vless Account          \E[0m"
+    echo -e "\033[1;93m━━━━━━━━━━━━━━━━━━━━━━━━━━
+    ━━━━━━━━━━━━━━━\033[0m"
+    echo ""
+    echo "A client with the specified name was already created, please choose another name."
+    echo ""
+    echo -e "\033[1;93m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+    read -n 1 -s -r -p "Press any key to back on menu"
+    menu
+  fi
+done
+uuid=$(cat /proc/sys/kernel/random/uuid)
+read -p "Expired (days): " masaaktif
+read -p "Limit User (GB): " Quota
+exp=$(date -d "$masaaktif days" +"%Y-%m-%d")
+sed -i '/#vless$/a\#& '"$user $exp"'\
+},{"id": "'""$uuid""'","email": "'""$user""'"' /etc/xray/config.json
+sed -i '/#vlessgrpc$/a\#& '"$user $exp"'\
+},{"id": "'""$uuid""'","email": "'""$user""'"' /etc/xray/config.json
+cat >/var/www/html/vless-$user.txt <<-END
+====================================================================
+             P R O J E C T  O F  N E V E R M O R E S S H
+                       [Freedom Internet]
+====================================================================
+        https://github.com/NevermoreSSH/skywalk
+====================================================================
+              Format Vless WS (CDN)
+====================================================================
+
+- name: nevermoressh-$user-WS (CDN)
+  server: ${domain}
+  port: 443
+  type: vless
+  uuid: ${uuid}
+  cipher: auto
+  tls: true
+  skip-cert-verify: true
+  servername: ${domain}
+  network: ws
+  udp: true
+  ws-opts:
+    path: /vless
+    headers:
+      Host: ${domain}
+_______________________________________________________
+              Format Vless WS (CDN) Non TLS
+_______________________________________________________
+- name: nevermoressh-$user-WS (CDN) Non TLS
+  server: ${domain}
+  port: 80
+  type: vless
+  uuid: ${uuid}
+  cipher: auto
+  tls: false
+  skip-cert-verify: false
+  servername: ${domain}
+  network: ws
+  ws-opts:
+  udp: true
+    path: /vless
+    headers:
+      Host: ${domain}
+_______________________________________________________
+              Format Vless gRPC (SNI)
+_______________________________________________________
+- name: nevermoressh-$user-gRPC (SNI)
+  server: ${domain}
+  port: 443
+  type: vless
+  uuid: ${uuid}
+  cipher: auto
+  tls: true
+  skip-cert-verify: true
+  servername: ${domain}
+  network: grpc
+  grpc-opts:
+  grpc-mode: gun
+  grpc-service-name: vless-grpc
+  udp: true
+
+_______________________________________________________
+        Format Vless WS (CDN) Non TLS Opok
+_______________________________________________________
+
+- name: nevermoressh-$user-WS (CDN) Non TLS
+  server: ${domain}
+  port: 80
+  type: vless
+  uuid: ${uuid}
+  cipher: auto
+  tls: false
+  skip-cert-verify: true
+  servername: comunity.instagram.com
+  network: false
+  udp: true
+  ws-opts:
+    path: http://tsel.me/worryfree
+    headers:
+      Host: ${domain}
+_______________________________________________________
+              Link Vless Account
+_______________________________________________________
+Link TLS : vless://${uuid}@${domain}:443?path=/vless&security=tls&encryption=none&type=ws#${user}
+_______________________________________________________
+Link none TLS : vless://${uuid}@${domain}:80?path=/vless&encryption=none&type=ws#${user}
+_______________________________________________________
+Link GRPC : vless://${uuid}@${domain}:443?mode=gun&security=tls&encryption=none&type=grpc&serviceName=vless-grpc&sni=${domain}#${user}
+_______________________________________________________
+Link Opok NTLS : vless://${uuid}@${domain}:80?path=http://tsel.me/worryfree&encryption=none&type=ws#${user}
+_______________________________________________________
+
+END
+vlesslink1="vless://${uuid}@${domain}:443?path=/vless&security=tls&encryption=none&type=ws#${user}"
+vlesslink2="vless://${uuid}@${domain}:80?path=/vless&encryption=none&type=ws#${user}"
+vlesslink3="vless://${uuid}@${domain}:443?mode=gun&security=tls&encryption=none&type=grpc&serviceName=vless-grpc&sni=${domain}#${user}"
+vlesslink4="vless://${uuid}@${domain}:80?path=http://tsel.me/worryfree&encryption=none&type=ws#${user}"
+systemctl restart xray
+systemctl restart nginx
+service cron restart
+if [ ! -e /etc/vless ]; then
+  mkdir -p /etc/vless
+fi
+
+if [ -z ${Quota} ]; then
+  Quota="0"
+fi
+
+c=$(echo "${Quota}" | sed 's/[^0-9]*//g')
+d=$((${c} * 1024 * 1024 * 1024))
+
+if [[ ${c} != "0" ]]; then
+  echo "${d}" >/etc/vless/${user}
+fi
+DATADB=$(cat /etc/vless/.vless.db | grep "^###" | grep -w "${user}" | awk '{print $2}')
+if [[ "${DATADB}" != '' ]]; then
+  sed -i "/\b${user}\b/d" /etc/vless/.vless.db
+fi
+echo "### ${user} ${exp} ${uuid}" >>/etc/vless/.vless.db
+curl -s --max-time $TIMES -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT&parse_mode=html" $URL
+clear
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "\e[42m    Xray/Vless Account     \E[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "Remarks     : ${user}" | tee -a /etc/nevermoressh/user.log
+echo -e "Domain      : ${domain}" | tee -a /etc/nevermoressh/user.log
+echo -e "Host Slowdns: ${NS}" | tee -a /etc/nevermoressh/user.log
+echo -e "Pub Key     : ${PUB}" | tee -a /etc/nevermoressh/user.log
+#echo -e "Location    : $CITY" | tee -a /etc/nevermoressh/user.log
+echo -e "User Quota  : ${Quota} GB" | tee -a /etc/nevermoressh/user.log
+echo -e "port TLS    : 443" | tee -a /etc/nevermoressh/user.log
+echo -e "Port DNS    : 443, 53 " | tee -a /etc/nevermoressh/user.log
+echo -e "Port NTLS   : 80, 8080, 2086" | tee -a /etc/nevermoressh/user.log
+echo -e "User ID     : ${uuid}" | tee -a /etc/nevermoressh/user.log
+echo -e "Encryption  : none" | tee -a /etc/nevermoressh/user.log
+echo -e "Path TLS    : /vless " | tee -a /etc/nevermoressh/user.log
+echo -e "ServiceName : vless-grpc" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "Link TLS   : ${vlesslink1}" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "Link NTLS  : ${vlesslink2}" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "Link GRPC  : ${vlesslink3}" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+#echo -e "Link OPOK  : ${vlesslink4}" | tee -a /etc/nevermoressh/user.log
+#echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "Format OpenClash : https://${domain}:81/vless-$user.txt" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "Expired On : $exp" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "" | tee -a /etc/nevermoressh/user.log
+read -n 1 -s -r -p "Press any key to back on menu"
+
+menu

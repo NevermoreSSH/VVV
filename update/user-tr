@@ -1,0 +1,75 @@
+#!/bin/bash
+# =========================================
+# Quick Setup | Script Setup Manager
+# Edition : Stable Edition V1.0
+# Auther  : NevermoreSSH
+# (C) Copyright 2022
+# =========================================
+clear
+MYIP=$(wget -qO- ipv4.icanhazip.com);
+NUMBER_OF_CLIENTS=$(grep -c -E "^#! " "/etc/xray/config.json")
+        if [[ ${NUMBER_OF_CLIENTS} == '0' ]]; then
+                echo -e "---------------------------------------------------"
+                echo -e "---------=[ Check XRAYS/Trojan WS Config ]=---------"
+                echo -e "---------------------------------------------------"
+                echo ""
+                echo "You have no existing clients!"
+                clear
+                exit 1
+        fi
+
+        echo -e "---------------------------------------------------"
+        echo -e "---------=[ Check XRAYS/Trojan WS Config ]=---------"
+        echo -e "---------------------------------------------------"
+        echo " Select the existing client to view the config"
+        echo " Press CTRL+C to return"
+		echo -e "---------------------------------------------------"
+        echo "     No  Expired   User"
+        grep -E "^#! " "/etc/xray/config.json" | cut -d ' ' -f 2-3 | nl -s ') '
+        until [[ ${CLIENT_NUMBER} -ge 1 && ${CLIENT_NUMBER} -le ${NUMBER_OF_CLIENTS} ]]; do
+                if [[ ${CLIENT_NUMBER} == '1' ]]; then
+                        read -rp "Select one client [1]: " CLIENT_NUMBER
+                else
+                        read -rp "Select one client [1-${NUMBER_OF_CLIENTS}]: " CLIENT_NUMBER
+                fi
+        done
+clear
+user=$(grep -E "^#! " "/etc/xray/config.json" | cut -d ' ' -f 2 | sed -n "${CLIENT_NUMBER}"p)
+domain=$(cat /etc/xray/domain)
+PUB=$(cat /etc/slowdns/server.pub)
+CITY=$(cat /etc/xray/city)
+NS=$(cat /etc/xray/dns)
+uuid=$(grep "},{" /etc/xray/config.json | cut -b 11-46 | sed -n "${CLIENT_NUMBER}"p)
+exp=$(grep -E "^#! " "/etc/xray/config.json" | cut -d ' ' -f 3 | sed -n "${CLIENT_NUMBER}"p)
+hariini=`date -d "0 days" +"%Y-%m-%d"`
+tls="$(cat ~/log-install.txt | grep -w "Vless TLS" | cut -d: -f2|sed 's/ //g')"
+nontls="$(cat ~/log-install.txt | grep -w "Vless None TLS" | cut -d: -f2|sed 's/ //g')"
+
+trojanlink="trojan://${uuid}@${domain}:443?path=%2Ftrojan-ws&security=tls&host=${domain}&type=ws&sni=${domain}#XRAY_TROJAN_${user}"
+trojanlink1="trojan://${uuid}@${domain}:443?mode=gun&security=tls&type=grpc&serviceName=trojan-grpc&sni=${domain}#XRAY_TROJAN_${user}"
+
+clear
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "\e[42m    Xray/Trojan Account    \E[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "Remarks     : ${user}" | tee -a /etc/nevermoressh/user.log
+echo -e "Host        : ${domain}" | tee -a /etc/nevermoressh/user.log
+echo -e "Host Slowdns: ${NS}" | tee -a /etc/nevermoressh/user.log
+echo -e "Pub Key     : ${PUB}" | tee -a /etc/nevermoressh/user.log
+#echo -e "Location    : $CITY" | tee -a /etc/nevermoressh/user.log
+#echo -e "User Quota  : ${Quota} GB" | tee -a /etc/nevermoressh/user.log
+echo -e "Port DNS    : 443, 53 " | tee -a /etc/nevermoressh/user.log
+echo -e "Port TLS    : 443" | tee -a /etc/nevermoressh/user.log
+echo -e "port        : 443" | tee -a /etc/nevermoressh/user.log
+echo -e "Key         : ${uuid}" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "Link WS    : ${trojanlink}" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "Link GRPC  : ${trojanlink1}" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "Format OpenClash : https://${domain}:81/trojan-$user.txt" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "Expired On : $exp" | tee -a /etc/nevermoressh/user.log
+echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
+echo -e "" | tee -a /etc/nevermoressh/user.log
+read -n 1 -s -r -p "Press any key to back on menu"

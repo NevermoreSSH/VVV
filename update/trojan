@@ -1,0 +1,44 @@
+#!/bin/bash
+# //====================================================
+# //	System Request:Debian 9+/Ubuntu 18.04+/20+
+# //	Author:	elliez
+# //	Dscription: Xray Menu Management
+# //	email: elliez667@gmail.com
+# //  telegram: https://t.me/todfix667
+# //====================================================
+# // font color configuration | NEVERMORE SSH AUTOSCRIPT
+clear
+grenbo="\e[92;1m"
+NC='\033[0m'
+echo -e "\033[1;93m┌──────────────────────────────────────────┐\033[0m"
+echo -e "\033[1;93m│$NC\033[42m          MENU MANAGER TROJAN             $NC"
+echo -e "\033[1;93m└──────────────────────────────────────────┘\033[0m"
+echo -e "\033[1;93m┌──────────────────────────────────────────┐\033[0m"
+echo -e "\033[1;93m│  ${grenbo}1.${NC} \033[0;36mCreating a Trojan Account${NC}"
+echo -e "\033[1;93m│  ${grenbo}2.${NC} \033[0;36mDelete Trojan Account${NC}"
+echo -e "\033[1;93m│  ${grenbo}3.${NC} \033[0;36mRenew Trojan Account${NC}"
+echo -e "\033[1;93m│  ${grenbo}4.${NC} \033[0;36mCheck Trojan Login Account${NC}"
+echo -e "\033[1;93m│  ${grenbo}5.${NC} \033[0;36mCheck Trojan Config Account${NC}"
+echo -e "\033[1;93m└──────────────────────────────────────────┘\033[0m"
+echo -e ""
+read -p "Select From Options [ 1 - 4 ] : " menu
+case $menu in
+1)
+    add-tr
+    ;;
+2)
+    del-tr
+    ;;
+3)
+    renew-tr
+    ;;
+4)
+    cek-tr
+    ;;
+5)
+    user-tr
+    ;;
+*)
+    menu
+    ;;
+esac
