@@ -12,7 +12,7 @@ if [ -z $USERSSH ]; then
 else
     if getent passwd $USERSSH >/dev/null 2>&1; then
         userdel $USERSSH >/dev/null 2>&1
-        sed -i "/^### $user/d" /etc/ssh/.ssh.db
+        sed -i "/^### $USERSSH/d" /etc/ssh/.ssh.db
         echo -e "User $USERSSH was removed."
     else
         echo -e "Failure: User $USERSSH Not Exist."
