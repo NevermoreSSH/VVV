@@ -64,9 +64,7 @@ wget -O menu "${REPO}menu"
 wget -O trojan "${REPO}trojan"
 wget -O user-tr "${REPO}user-tr"
 wget -O user-vless "${REPO}user-vless"
-wget -O user-ws "${REPO}user-ws"
 wget -O vless "${REPO}vless"
-wget -O vmess "${REPO}vmess"
 wget -O xp "${REPO}xp"
 
 
@@ -84,9 +82,7 @@ chmod +x menu
 chmod +x trojan
 chmod +x user-tr
 chmod +x user-vless
-chmod +x user-ws
 chmod +x vless
-chmod +x vmess
 chmod +x xp
 
 cd
