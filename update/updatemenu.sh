@@ -29,14 +29,20 @@ RAMMS=$(free -m | awk 'NR==2 {print $2}')
 KEY="2145515560:AAE9WqfxZzQC-FYF1VUprICGNomVfv6OdTU"
 URL="https://api.telegram.org/bot$KEY/sendMessage"
 REPO="https://raw.githubusercontent.com/NevermoreSSH/VVV/main/update/"
-APT="apt-get -y install "
-domain=$(cat /root/domain)
+APT="apt-get -y install"
 start=$(date +%s)
 
 echo "0 1 * * * root xp" >> /etc/crontab
 echo "*/2 * * * * root logclean" >> /etc/crontab
-echo "0 5 * * * root reboot" >> /etc/crontab
 echo "0 3 * * * root /usr/bin/xp" >> /etc/crontab
+echo "0 5 * * * root reboot" >> /etc/crontab
+echo "0 8 * * * root systemctl restart squid" >> /etc/crontab
+echo "0 11 * * * root systemctl restart squid" >> /etc/crontab
+echo "0 14 * * * root systemctl restart squid" >> /etc/crontab
+echo "0 17 * * * root systemctl restart squid" >> /etc/crontab
+echo "0 20 * * * root systemctl restart squid" >> /etc/crontab
+echo "0 23 * * * root systemctl restart squid" >> /etc/crontab
+echo "0 2 * * * root systemctl restart squid" >> /etc/crontab
 
 apt install htop -y 
 apt install vnstat -y 
