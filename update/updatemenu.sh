@@ -68,8 +68,6 @@ wget -O user-ws "${REPO}user-ws"
 wget -O vless "${REPO}vless"
 wget -O vmess "${REPO}vmess"
 wget -O xp "${REPO}xp"
-wget -O ssh "${REPO}ssh"
-wget -O member "${REPO}member"
 
 
 chmod +x add-ss
@@ -90,7 +88,5 @@ chmod +x user-ws
 chmod +x vless
 chmod +x vmess
 chmod +x xp
-chmod +x ssh
-chmod +x member
 
 cd
