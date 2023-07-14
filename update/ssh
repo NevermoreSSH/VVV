@@ -1,0 +1,44 @@
+#!/bin/bash
+# //====================================================
+# //	System Request:Debian 9+/Ubuntu 18.04+/20+
+# //	Author:	elliez
+# //	Dscription: Xray Menu Management
+# //	email: elliez667@gmail.com
+# //  telegram: https://t.me/todfix667
+# //====================================================
+# // font color configuration | NEVERMORE SSH AUTOSCRIPT
+clear
+grenbo="\e[92;1m"
+NC='\033[0m'
+echo -e "\033[1;93m┌──────────────────────────────────────────┐\033[0m"
+echo -e "\033[1;93m│$NC\033[42m            MENU MANAGER SSH              $NC"
+echo -e "\033[1;93m└──────────────────────────────────────────┘\033[0m"
+echo -e "\033[1;93m┌──────────────────────────────────────────┐\033[0m"
+echo -e "\033[1;93m│  ${grenbo}1.${NC} \033[0;36mCreating a SSH OVPN Account${NC}"
+echo -e "\033[1;93m│  ${grenbo}2.${NC} \033[0;36mDelete SSH OVPN Account${NC}"
+echo -e "\033[1;93m│  ${grenbo}3.${NC} \033[0;36mRenew SSH OVPN Account${NC}"
+echo -e "\033[1;93m│  ${grenbo}4.${NC} \033[0;36mCheck SSH OVPN Login Account${NC}"
+echo -e "\033[1;93m│  ${grenbo}5.${NC} \033[0;36mCheck SSH OVPN Config Account${NC}"
+echo -e "\033[1;93m└──────────────────────────────────────────┘\033[0m"
+echo -e ""
+read -p "Select From Options [ 1 - 4 ] : " menu
+case $menu in
+1)
+    add-ssh
+    ;;
+2)
+    del-ssh
+    ;;
+3)
+    renew-ssh
+    ;;
+4)
+    cek-ssh
+    ;;
+5)
+    member
+    ;;
+*)
+    menu
+    ;;
+esac
