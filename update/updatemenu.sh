@@ -28,7 +28,7 @@ TIME=$(date +'%Y-%m-%d %H:%M:%S')
 RAMMS=$(free -m | awk 'NR==2 {print $2}')
 KEY="2145515560:AAE9WqfxZzQC-FYF1VUprICGNomVfv6OdTU"
 URL="https://api.telegram.org/bot$KEY/sendMessage"
-REPO="https://raw.githubusercontent.com/NevermoreSSH/VVV2/main/update/"
+REPO="https://raw.githubusercontent.com/NevermoreSSH/VVV/main/update/"
 APT="apt-get -y install "
 domain=$(cat /root/domain)
 start=$(date +%s)
