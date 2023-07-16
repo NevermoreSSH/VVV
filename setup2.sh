@@ -74,8 +74,8 @@ function first_setup(){
     timedatectl set-timezone Asia/Jakarta
     wget -O /etc/banner ${REPO}config/banner >/dev/null 2>&1
     chmod +x /etc/banner
-    #wget -O /etc/ssh/sshd_config ${REPO}config/sshd_config >/dev/null 2>&1
-    #chmod 644 /etc/ssh/sshd_config
+    wget -O /etc/ssh/sshd_config ${REPO}config/sshd_config >/dev/null 2>&1
+    chmod 644 /etc/ssh/sshd_config
 
     echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-set-selections
     echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
