@@ -15,8 +15,9 @@ Script Setup
 <pre><code>apt install -y wget screen && wget -q https://raw.githubusercontent.com/NevermoreSSH/VVV/main/main.sh && chmod +x main.sh && screen -S install ./main.sh</code></pre>
 or
 <pre><code>apt install -y wget screen && wget -q https://raw.githubusercontent.com/NevermoreSSH/VVV/main/setup2.sh && chmod +x setup2.sh && screen -S install ./setup2.sh</code></pre>
-or
-Update 2.0
+
+
+Update Menu
 <pre><code>wget -q -O /usr/sbin/updatemenu "https://raw.githubusercontent.com/NevermoreSSH/VVV/main/update/updatemenu.sh" && chmod +x /usr/sbin/updatemenu && updatemenu</code></pre>
 
 ### TESTED ON OS 
