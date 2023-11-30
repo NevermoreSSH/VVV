@@ -66,7 +66,7 @@ wget -O user-tr "${REPO}user-tr"
 wget -O user-vless "${REPO}user-vless"
 wget -O vless "${REPO}vless"
 wget -O xp "${REPO}xp"
-wget -O xp "${REPO}get-domain"
+wget -O get-domain "${REPO}get-domain"
 
 
 chmod +x add-ss
