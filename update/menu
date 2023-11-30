@@ -135,7 +135,7 @@ echo -e "\033[1;93m│  ${grenbo}6.${NC} \033[0mRUNNING SYSTEM${NC}   ${grenbo}1
 echo -e "\033[1;93m│  ${grenbo}7.${NC} \033[0mBACKUP & RESTORE${NC} ${grenbo}14.${NC} \033[0mRESTART SERVER${NC}"
 echo -e "\033[1;93m│  "
 echo -e "\033[1;93m│  ${grenbo}15.${NC} \033[0mDNS CHANGER${NC}     ${grenbo}16.${NC} \033[0mNETFLIX CHECKER${NC}"
-echo -e "\033[1;93m│  ${grenbo}17.${NC} \033[0mSWAP RAM${NC}        ${grenbo}18.${NC} \033[0mXRAY-CORE CHANGER${NC}"
+echo -e "\033[1;93m│  ${grenbo}17.${NC} \033[0mSWAP RAM${NC}        ${grenbo}18.${NC} \033[0mXRAYCORE CHANGER${NC}"
 echo -e "\033[1;93m└──────────────────────────────────────────┘\033[0m"
 echo -e ""
 echo -e "\033[1;93m┌───────────────────────────────────────────┐\033[0m"
