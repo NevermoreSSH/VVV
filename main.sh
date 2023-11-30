@@ -334,8 +334,8 @@ function tambahan(){
     dpkg -i /tmp/gotop.deb >/dev/null 2>&1
 
     # > Install BBR Plus
-    wget -qO /tmp/bbr.sh "${REPO}server/bbr.sh" >/dev/null 2>&1
-    chmod +x /tmp/bbr.sh && bash /tmp/bbr.sh
+    #wget -qO /tmp/bbr.sh "${REPO}server/bbr.sh" >/dev/null 2>&1
+    #chmod +x /tmp/bbr.sh && bash /tmp/bbr.sh
 
     # > Make a swap of 1GB
     dd if=/dev/zero of=/swapfile bs=1024 count=1048576
