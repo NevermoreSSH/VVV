@@ -28,7 +28,6 @@ Update Menu
 - Dynamic installation
 - Tuning profiles on the server
 - Xray Core by @dharak36
-- BBR+ by UJEXN
 - Added fail2ban
 
 ### PORT INFO
