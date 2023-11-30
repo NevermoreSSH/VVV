@@ -20,6 +20,12 @@ or
 Update Menu
 <pre><code>wget -q -O /usr/sbin/updatemenu "https://raw.githubusercontent.com/NevermoreSSH/VVV/main/update/updatemenu.sh" && chmod +x /usr/sbin/updatemenu && updatemenu</code></pre>
 
+
+If problem "ERROR: The certificate of 'raw.githubusercontent.com' is not trusted"
+
+
+The solution simple install: `apt-get install ca-certificates`
+
 ### TESTED ON OS 
 - DEBIAN 10 & UBUNTU 20.04
 
