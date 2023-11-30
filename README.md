@@ -74,6 +74,7 @@ Update Menu
 
 ### BUG
 * Squid problem (off temporarily, openvpn off)
+* Disable BBRplus
 
 ### Credits
 - [Dharak36](https://github.com/dharak36/Xray-core)
