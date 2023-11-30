@@ -58,10 +58,10 @@ function get_acme_domain() {
 }
 ns_domain_cloudflare() {
     DOMAINNS="slowdns.app"
-    DOMAIN=$(cat /etc/xray/domain)
+    DAOMIN=$(cat /etc/xray/domain)
     SUB=$(tr </dev/urandom -dc a-z0-9 | head -c6)
     SUB_DOMAIN=${SUB}."slowdns.app"
-    NS_DOMAIN=ns-${DOMAIN}
+    NS_DOMAIN=ns-${DAOMIN}
     CF_ID=elliez667@gmail.com
     CF_KEY=9dd2f30c099dbcf541cbd5c188d61ce060cf7
     set -euo pipefail
