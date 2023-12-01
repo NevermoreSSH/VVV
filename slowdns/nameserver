@@ -5,7 +5,7 @@ ns_domain_cloudflare() {
 	DOMAIN_PATH=$(cat /etc/xray/domain)
 	SUB=$(tr </dev/urandom -dc a-z0-9 | head -c6)
 	SUB_DOMAIN=${SUB}.$DOMAIN
-	NS_DOMAIN=ns.${SUB_DOMAIN}
+	NS_DOMAIN=ns-${DOMAIN}
 	CF_ID=elliez667@gmail.com
         CF_KEY=f7fa85e2472592639b7d1cf82f1c5490ec1cd
 	set -euo pipefail
