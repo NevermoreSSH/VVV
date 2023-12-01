@@ -52,11 +52,12 @@ function get_acme_domain() {
     systemctl restart xray >/dev/null 2>&1
     sleep 2
     echo ""
-    read -n 1 -s -r -p "Press any key to back on menu"
+    echo -e "${GREEN}--->${NC}     Renew NS-Domain "
+#    read -n 1 -s -r -p "Press any key to back on menu"
 
-    menu
+#    menu
 }
-ns_domain_cloudflare() {
+function ns_domain_cloudflare() {
     DOMAINNS="slowdns.app"
     DAOMIN=$(cat /etc/xray/domain)
     SUB=$(tr </dev/urandom -dc a-z0-9 | head -c6)
@@ -116,7 +117,11 @@ echo -e "       ${GREEN}Total RAM${NC}   :  $totalram MB"
 echo -e ""
 echo -e "───────────────────────────────────────────────────────"
 read -rp "Input ur Domain/Host : " -e domain
+#read -rp "Input ur NS-Domain   : " -e NS_DOMAIN
 rm -rf /etc/xray/domain
 echo $domain >/etc/xray/domain
+#echo $NS_DOMAIN >/etc/xray/dns
 get_acme_domain
 ns_domain_cloudflare
+read -n 1 -s -r -p "Press any key to back on menu"
+menu
