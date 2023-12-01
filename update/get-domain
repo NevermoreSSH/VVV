@@ -52,7 +52,7 @@ function get_acme_domain() {
     systemctl restart xray >/dev/null 2>&1
     sleep 2
     echo ""
-    echo -e "${GREEN}--->${NC}     Renew NS-Domain "
+#    echo -e "${GREEN}--->${NC}     Renew NS-Domain "
 #    read -n 1 -s -r -p "Press any key to back on menu"
 
 #    menu
@@ -67,6 +67,7 @@ function ns_domain_cloudflare() {
     CF_KEY=9dd2f30c099dbcf541cbd5c188d61ce060cf7
     set -euo pipefail
     IP=$(wget -qO- ipinfo.io/ip)
+    echo "Updating DNS NS for ${NS_DOMAIN}..."
     ZONE=$(
         curl -sLX GET "https://api.cloudflare.com/client/v4/zones?name=${DOMAINNS}&status=active" \
             -H "X-Auth-Email: ${CF_ID}" \
