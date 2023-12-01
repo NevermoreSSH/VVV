@@ -159,7 +159,8 @@ function install_xray(){
     xraycore_link="https://github.com/NevermoreSSH/Xcore-custompath/releases/download/Xray-linux-64-v1.6.5.1/Xray-linux-64-v1.6.5.1"
     curl -sL "$xraycore_link" -o xray
 #    unzip -q xray.zip && rm -rf xray.zip
-    mv xray /usr/sbin/xray
+#    mv xray /usr/sbin/xray
+    mv xray /usr/local/bin/xray
     print_success "Xray Core"
     
     cat /etc/xray/xray.crt /etc/xray/xray.key | tee /etc/haproxy/xray.pem
