@@ -6,7 +6,7 @@
 # //	email: elliez667@gmail.com
 # //  telegram: https://t.me/todfix667
 # //====================================================
-# // font color configuration | NEVERMORE SSH AUTOSCRIPT
+# // font color configuration | NEVERMORESSH AUTOSCRIPT
 red() { echo -e "\\033[32;1m${*}\\033[0m"; }
 TIMES="10"
 CHATID="-1001891259267"
@@ -114,7 +114,7 @@ cat >/var/www/html/vmess-$user.txt <<-END
              P R O J E C T  O F  N E V E R M O R E S S H
                        [Freedom Internet]
 ====================================================================
-        https://github.com/NevermoreSSH/skywalk
+        https://github.com/NevermoreSSH/VVV
 ====================================================================
               Format Vmess WS (CDN)
 ====================================================================
