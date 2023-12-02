@@ -34,7 +34,7 @@ cat > /var/www/html/ssh-$LOGIN.txt <<-END
              P R O J E C T  O F  N E V E R M O R E S S H
                        [Freedom Internet]
 ====================================================================
-        https://github.com/NevermoreSSH/skywalk
+        https://github.com/NevermoreSSH/VVV
 ====================================================================
               Format SSH OVPN Account
 ====================================================================
@@ -61,7 +61,7 @@ Port OVPN UDP    : 2200
 Proxy Squid 1    : 3128
 Proxy Squid 2    : 8000
 Proxy Squid 3    : 8080
-BadVPN UDP       : 7100, 7300, 7300
+BadVPN UDP       : 7100, 7200, 7300
 __________________________________
 Payload WSS: GET wss://BUG.COM/ HTTP/1.1[crlf]Host: $domain[crlf]Upgrade: websocket[crlf][crlf] 
 __________________________________
@@ -97,7 +97,7 @@ TEXT="
 <code>Port OVPN TCP    : 443, 1194</code>
 <code>Port OVPN UDP    : 2200</code>
 <code>Proxy Squid      : 3128</code>
-<code>BadVPN UDP       : 7100, 7300, 7300</code>
+<code>BadVPN UDP       : 7100, 7200, 7300</code>
 <code>───────────────────────────</code>
 <code>Payload WSS      : </code><code>GET wss://BUG.COM/ HTTP/1.1[crlf]Host: $domain[crlf]Upgrade: websocket[crlf][crlf]</code>
 <code>───────────────────────────</code>
@@ -135,7 +135,7 @@ echo -e "Port OVPN SSL    : 443" | tee -a /etc/nevermoressh/user.log
 echo -e "Port OVPN TCP    : 443, 1194" | tee -a /etc/nevermoressh/user.log
 echo -e "Port OVPN UDP    : 2200" | tee -a /etc/nevermoressh/user.log
 echo -e "Proxy Squid      : 3128" | tee -a /etc/nevermoressh/user.log
-echo -e "BadVPN UDP       : 7100, 7300, 7300" | tee -a /etc/nevermoressh/user.log
+echo -e "BadVPN UDP       : 7100, 7200, 7300" | tee -a /etc/nevermoressh/user.log
 echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
 echo -e "Payload WSS      : GET wss://BUG.COM/ HTTP/1.1[crlf]Host: $domain[crlf]Upgrade: websocket[crlf][crlf]" | tee -a /etc/nevermoressh/user.log
 echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
