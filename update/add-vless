@@ -52,12 +52,12 @@ cat >/var/www/html/vless-$user.txt <<-END
              P R O J E C T  O F  N E V E R M O R E S S H
                        [Freedom Internet]
 ====================================================================
-        https://github.com/NevermoreSSH/skywalk
+        https://github.com/NevermoreSSH/VVV
 ====================================================================
               Format Vless WS (CDN)
 ====================================================================
 
-- name: nevermoressh-$user-WS (CDN)
+- name: VlessTLS-$user-WS (CDN)
   server: ${domain}
   port: 443
   type: vless
@@ -75,7 +75,7 @@ cat >/var/www/html/vless-$user.txt <<-END
 _______________________________________________________
               Format Vless WS (CDN) Non TLS
 _______________________________________________________
-- name: nevermoressh-$user-WS (CDN) Non TLS
+- name: VlessNTLS-$user-WS (CDN) Non TLS
   server: ${domain}
   port: 80
   type: vless
@@ -93,7 +93,7 @@ _______________________________________________________
 _______________________________________________________
               Format Vless gRPC (SNI)
 _______________________________________________________
-- name: nevermoressh-$user-gRPC (SNI)
+- name: Vless-$user-gRPC (SNI)
   server: ${domain}
   port: 443
   type: vless
@@ -109,25 +109,6 @@ _______________________________________________________
   udp: true
 
 _______________________________________________________
-        Format Vless WS (CDN) Non TLS Opok
-_______________________________________________________
-
-- name: nevermoressh-$user-WS (CDN) Non TLS
-  server: ${domain}
-  port: 80
-  type: vless
-  uuid: ${uuid}
-  cipher: auto
-  tls: false
-  skip-cert-verify: true
-  servername: comunity.instagram.com
-  network: false
-  udp: true
-  ws-opts:
-    path: http://tsel.me/worryfree
-    headers:
-      Host: ${domain}
-_______________________________________________________
               Link Vless Account
 _______________________________________________________
 Link TLS : vless://${uuid}@${domain}:443?path=/vless&security=tls&encryption=none&type=ws#${user}
@@ -135,8 +116,6 @@ _______________________________________________________
 Link none TLS : vless://${uuid}@${domain}:80?path=/vless&encryption=none&type=ws#${user}
 _______________________________________________________
 Link GRPC : vless://${uuid}@${domain}:443?mode=gun&security=tls&encryption=none&type=grpc&serviceName=vless-grpc&sni=${domain}#${user}
-_______________________________________________________
-Link Opok NTLS : vless://${uuid}@${domain}:80?path=http://tsel.me/worryfree&encryption=none&type=ws#${user}
 _______________________________________________________
 
 END
@@ -191,8 +170,6 @@ echo -e "Link NTLS  : ${vlesslink2}" | tee -a /etc/nevermoressh/user.log
 echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
 echo -e "Link GRPC  : ${vlesslink3}" | tee -a /etc/nevermoressh/user.log
 echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
-#echo -e "Link OPOK  : ${vlesslink4}" | tee -a /etc/nevermoressh/user.log
-#echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
 echo -e "Format OpenClash : https://${domain}:81/vless-$user.txt" | tee -a /etc/nevermoressh/user.log
 echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
 echo -e "Expired On : $exp" | tee -a /etc/nevermoressh/user.log
