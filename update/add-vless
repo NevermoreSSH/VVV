@@ -122,7 +122,6 @@ END
 vlesslink1="vless://${uuid}@${domain}:443?path=/vless&security=tls&encryption=none&type=ws#${user}"
 vlesslink2="vless://${uuid}@${domain}:80?path=/vless&encryption=none&type=ws#${user}"
 vlesslink3="vless://${uuid}@${domain}:443?mode=gun&security=tls&encryption=none&type=grpc&serviceName=vless-grpc&sni=${domain}#${user}"
-vlesslink4="vless://${uuid}@${domain}:80?path=http://tsel.me/worryfree&encryption=none&type=ws#${user}"
 systemctl restart xray
 systemctl restart nginx
 service cron restart
