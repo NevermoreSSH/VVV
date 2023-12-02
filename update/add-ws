@@ -119,7 +119,7 @@ cat >/var/www/html/vmess-$user.txt <<-END
               Format Vmess WS (CDN)
 ====================================================================
 
-- name: nevermoressh-Vmess-$user-WS (CDN)
+- name: VmessTLS-$user-WS (CDN)
   type: vmess
   server: ${domain}
   port: 443
@@ -139,7 +139,7 @@ _______________________________________________________
               Format Vmess WS (CDN) Non TLS
 _______________________________________________________
 
-- name: nevermoressh-$user-WS (CDN) Non TLS
+- name: VmessNTLS-$user-WS (CDN) Non TLS
   type: vmess
   server: ${domain}
   port: 80
@@ -159,7 +159,7 @@ _______________________________________________________
               Format Vmess gRPC (SNI)
 _______________________________________________________
 
-- name: nevermoressh-$user-gRPC (SNI)
+- name: Vmess-$user-gRPC (SNI)
   server: ${domain}
   port: 443
   type: vmess
@@ -174,26 +174,6 @@ _______________________________________________________
   grpc-service-name: vmess-grpc
 
 _______________________________________________________
-        Format Vmess WS (CDN) Non TLS Opok
-_______________________________________________________
-
-- name: nevermoressh-$user-WS (CDN) Non TLS
-  type: vmess
-  server: ${domain}
-  port: 80
-  uuid: ${uuid}
-  alterId: 0
-  cipher: auto
-  udp: true
-  tls: false
-  skip-cert-verify: true
-  servername: comunity.instagram.com
-  network: ws
-  ws-opts:
-    path: http://tsel.me/worryfree
-    headers:
-      Host: ${domain}
-_______________________________________________________
               Link Vmess Account
 _______________________________________________________
 Link TLS : vmess://$(echo $VMESS_WS | base64 -w 0)
@@ -202,10 +182,6 @@ Link none TLS : vmess://$(echo $VMESS_NON_TLS | base64 -w 0)
 _______________________________________________________
 Link GRPC : vmess://$(echo $VMESS_GRPC | base64 -w 0)
 _______________________________________________________
-Link Opok : vmess://$(echo $VMESS_OPOK | base64 -w 0)
-_______________________________________________________
-
-
 
 END
 vmesslink1="vmess://$(echo $VMESS_WS | base64 -w 0)"
@@ -243,9 +219,6 @@ TEXT="
 <code>───────────────────────────</code>
 <code>Link GRPC    :</code> 
 <code>${vmesslink3}</code>
-<code>───────────────────────────</code>
-<code>Link Opok    :</code> 
-<code>${vmesslink4}</code>
 <code>───────────────────────────</code>
 <code>Format OpenClash :</code> http://${domain}:81/vmess-$user.txt
 <code>───────────────────────────</code>
@@ -304,8 +277,6 @@ echo -e "Link NTLS    : ${vmesslink2}" | tee -a /etc/nevermoressh/user.log
 echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
 echo -e "Link GRPC    : ${vmesslink3}" | tee -a /etc/nevermoressh/user.log
 echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
-#echo -e "Link OPOK    : ${vmesslink4}" | tee -a /etc/nevermoressh/user.log
-#echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
 echo -e "Format OpenClash : https://${domain}:81/vmess-$user.txt" | tee -a /etc/nevermoressh/user.log
 echo -e "\033[1;93m───────────────────────────\033[0m" | tee -a /etc/nevermoressh/user.log
 echo -e "Expired On : $exp" | tee -a /etc/nevermoressh/user.log
