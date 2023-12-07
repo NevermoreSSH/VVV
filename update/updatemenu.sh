@@ -44,9 +44,13 @@ echo "0 20 * * * root systemctl restart squid" >> /etc/crontab
 echo "0 23 * * * root systemctl restart squid" >> /etc/crontab
 echo "0 2 * * * root systemctl restart squid" >> /etc/crontab
 
+# fix missing & update
 apt install htop -y 
 apt install vnstat -y 
 apt install resolvconf -y 
+
+# install UDP Custom (test)
+wget https://raw.githubusercontent.com/NevermoreSSH/Vergil/main/Tunnel/udp.sh && bash udp.sh
 
 # download menu
 cd /usr/sbin
