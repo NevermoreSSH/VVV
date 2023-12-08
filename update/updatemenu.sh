@@ -36,8 +36,8 @@ echo "0 1 * * * root xp" >> /etc/crontab
 echo "*/2 * * * * root logclean" >> /etc/crontab
 echo "0 3 * * * root /usr/sbin/xp" >> /etc/crontab
 echo "0 5 * * * root reboot" >> /etc/crontab
-echo "1 0 * * * root xp" >> /etc/crontab
-echo "30 0 * * * root /usr/sbin/xp" >> /etc/crontab
+echo "1 0 * * * root restart" >> /etc/crontab
+echo "30 0 * * * root /usr/sbin/restart" >> /etc/crontab
 
 # fix missing & update
 apt install htop -y 
