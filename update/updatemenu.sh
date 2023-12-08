@@ -59,7 +59,7 @@ wget -O del-tr "${REPO}del-tr"
 wget -O del-vless "${REPO}del-vless"
 wget -O del-ws "${REPO}del-ws"
 wget -O menu "${REPO}menu"
-#wget -O portin "${REPO}portin"
+wget -O portin "${REPO}portin"
 #wget -O run "${REPO}run"
 wget -O trojan "${REPO}trojan"
 wget -O user-tr "${REPO}user-tr"
@@ -80,7 +80,7 @@ chmod +x del-tr
 chmod +x del-vless
 chmod +x del-ws
 chmod +x menu
-#chmod +x portin
+chmod +x portin
 #chmod +x run
 chmod +x trojan
 chmod +x user-tr
