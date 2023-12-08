@@ -42,7 +42,8 @@ The solution simple install: `apt-get install ca-certificates`
 - Open SSH                : 443, 80, 22         
 - DNS (SLOWDNS)           : 443, 80, 53          
 - Dropbear                : 443, 109, 80        
-- Dropbear Websocket      : 443, 109            
+- Dropbear Websocket      : 443, 109
+- UDP Custom              : 1-65535          
 - SSH Websocket SSL       : 443                  
 - SSH Websocket           : 80                 
 - OpenVPN SSL             : 443                   
@@ -80,7 +81,6 @@ The solution simple install: `apt-get install ca-certificates`
 
 ### BUG
 * Squid problem, disable permanent
-* Disable BBRplus
 * GRPC not working
 
 ### Credits
