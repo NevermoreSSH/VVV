@@ -81,6 +81,7 @@ The solution simple install: `apt-get install ca-certificates`
 ### BUG
 * Squid problem (off temporarily, openvpn off)
 * Disable BBRplus
+* GRPC not working
 
 ### Credits
 - [Dharak36](https://github.com/dharak36/Xray-core)
