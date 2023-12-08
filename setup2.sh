@@ -489,7 +489,7 @@ function finish(){
     echo "    │   - Shadowsocks gRPC        : 443                   │"
     echo "    │                                                     │"
     echo "    │      >>> Server Information & Other Features        │"
-    echo "    │   - Autoreboot On           : $AUTOREB:00 $TIME_DATE GMT +7        │"
+    echo "    │   - Autoreboot On           : $AUTOREB:00 $TIME_DATE GMT +8        │"
     echo "    │   - Auto Delete Expired Account                     │"
     echo "    │   - Fully automatic script                          │"
     echo "    │   - VPS settings                                    │"
