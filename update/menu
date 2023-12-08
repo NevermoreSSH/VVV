@@ -204,7 +204,7 @@ case $menu in
     wget https://raw.githubusercontent.com/NevermoreSSH/Vergil/main/Tunnel/udp.sh && bash udp.sh
     ;;
 20)
-    wget -q -O /usr/sbin/bbr4 "https://raw.githubusercontent.com/NevermoreSSH/BBRplus/main/bbr.sh" && chmod +x /usr/bin/bbr4 && bbr4
+    wget -q -O /usr/sbin/bbr5 "https://raw.githubusercontent.com/NevermoreSSH/BBRplus/main/bbr.sh" && chmod +x /usr/sbin/bbr5 && bbr5
     ;;
 *)
     menu
