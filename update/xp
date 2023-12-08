@@ -60,4 +60,6 @@ for user in "${data[@]}"; do
 		sed -i "/^### $user $exp/d" /etc/shadowsocks/.shadowsocks.db
     fi
 done
-systemctl restart xray
+systemctl restart squid
+fi
+done
