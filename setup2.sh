@@ -87,8 +87,8 @@ function base_package() {
     apt-get autoremove -y man-db apache2 ufw exim4 firewalld snapd* -y
     clear
     print_install "Install the required packages"
-    sysctl -w net.ipv6.conf.all.disable_ipv6=1 >/dev/null 2>&1
-    sysctl -w net.ipv6.conf.default.disable_ipv6=1  >/dev/null 2>&1
+#    sysctl -w net.ipv6.conf.all.disable_ipv6=1 >/dev/null 2>&1
+#    sysctl -w net.ipv6.conf.default.disable_ipv6=1  >/dev/null 2>&1
     apt install software-properties-common -y
     add-apt-repository ppa:vbernat/haproxy-2.7 -y
     apt update && apt upgrade -y
