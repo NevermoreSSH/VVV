@@ -79,7 +79,7 @@ The solution simple install: `apt-get install ca-certificates`
 `Beta Testing`
 
 ### BUG
-* Squid problem (off temporarily, openvpn off)
+* Squid problem
 * Disable BBRplus
 * GRPC not working
 
