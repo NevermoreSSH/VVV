@@ -36,13 +36,7 @@ echo "0 1 * * * root xp" >> /etc/crontab
 echo "*/2 * * * * root logclean" >> /etc/crontab
 echo "0 3 * * * root /usr/bin/xp" >> /etc/crontab
 echo "0 5 * * * root reboot" >> /etc/crontab
-echo "0 8 * * * root systemctl restart squid" >> /etc/crontab
-echo "0 11 * * * root systemctl restart squid" >> /etc/crontab
-echo "0 14 * * * root systemctl restart squid" >> /etc/crontab
-echo "0 17 * * * root systemctl restart squid" >> /etc/crontab
-echo "0 20 * * * root systemctl restart squid" >> /etc/crontab
-echo "0 23 * * * root systemctl restart squid" >> /etc/crontab
-echo "0 2 * * * root systemctl restart squid" >> /etc/crontab
+echo "1 0 * * * root systemctl restart squid" >> /etc/crontab
 
 # fix missing & update
 apt install htop -y 
