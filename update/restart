@@ -1,0 +1,5 @@
+#!/bin/bash
+clear
+systemctl restart squid
+sleep 2
+menu
