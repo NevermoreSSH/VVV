@@ -71,7 +71,7 @@ function is_root() {
 
 ### Change Environment System
 function first_setup(){
-    timedatectl set-timezone Asia/Jakarta
+    timedatectl set-timezone Asia/Kuala_Lumpur
     wget -O /etc/banner ${REPO}config/banner >/dev/null 2>&1
     chmod +x /etc/banner
     wget -O /etc/ssh/sshd_config ${REPO}config/sshd_config >/dev/null 2>&1
@@ -488,7 +488,7 @@ function finish(){
     echo "    │   - Shadowsocks gRPC        : 443                   │"
     echo "    │                                                     │"
     echo "    │      >>> Server Information & Other Features        │"
-    echo "    │   - Autoreboot On           : $AUTOREB:00 $TIME_DATE GMT +7        │"
+    echo "    │   - Autoreboot On           : $AUTOREB:00 $TIME_DATE GMT +8        │"
     echo "    │   - Auto Delete Expired Account                     │"
     echo "    │   - Fully automatic script                          │"
     echo "    │   - VPS settings                                    │"
