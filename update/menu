@@ -136,6 +136,7 @@ echo -e "\033[1;93m│  ${grenbo}7.${NC} \033[0mBACKUP & RESTORE${NC} ${grenbo}1
 echo -e "\033[1;93m│  "
 echo -e "\033[1;93m│  ${grenbo}15.${NC} \033[0mDNS CHANGER${NC}     ${grenbo}16.${NC} \033[0mNETFLIX CHECKER${NC}"
 echo -e "\033[1;93m│  ${grenbo}17.${NC} \033[0mSWAP RAM${NC}        ${grenbo}18.${NC} \033[0mXRAYCORE CHANGER ${NC}"
+echo -e "\033[1;93m│  ${grenbo}19.${NC} \033[0mINSTALL UDP${NC}     ${grenbo}20.${NC} \033[0mINSTALL BBRPLUS ${NC}"
 echo -e "\033[1;93m└──────────────────────────────────────────┘\033[0m"
 echo -e ""
 echo -e "\033[1;93m┌───────────────────────────────────────────┐\033[0m"
@@ -198,6 +199,12 @@ case $menu in
 18)
     wget -q -O /usr/bin/xraychanger2 "https://raw.githubusercontent.com/NevermoreSSH/Xcore-custompath/main/xraychanger2.sh" && chmod +x /usr/bin/xraychanger2 && xraychanger2
     #exit
+    ;;
+19)
+    wget https://raw.githubusercontent.com/NevermoreSSH/Vergil/main/Tunnel/udp.sh && bash udp.sh
+    ;;
+20)
+    wget -q -O /usr/sbin/bbr4 "https://raw.githubusercontent.com/NevermoreSSH/BBRplus/main/bbr.sh" && chmod +x /usr/bin/bbr4 && bbr4
     ;;
 *)
     menu
