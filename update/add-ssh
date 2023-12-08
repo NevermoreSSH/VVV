@@ -51,6 +51,7 @@ Location         : $CITY
 Port OpenSSH     : 443, 80, 22
 Port Dropbear    : 443, 109
 Port Dropbear WS : 443, 109
+Port UDP-Custom  : 1-65535
 Port SSH WS      : 80
 Port SSH SSL WS  : 443
 Port SSL/TLS     : 443
@@ -88,6 +89,7 @@ TEXT="
 <code>Port OpenSSH     : 443, 80, 22</code>
 <code>Port Dropbear    : 443, 109</code>
 <code>Port Dropbear WS : 443, 109</code>
+<code>Port UDP-Custom  : 1-65535</code>
 <code>Port DNS         : 443, 53, 22</code> 
 <code>Port SSH WS      : 80 </code>
 <code>Port SSH SSL WS  : 443</code>
@@ -127,6 +129,7 @@ echo -e "Port OpenSSH     : 443, 80, 22" | tee -a /etc/nevermoressh/user.log
 echo -e "Port DNS         : 443, 53 ,22 " | tee -a /etc/nevermoressh/user.log
 echo -e "Port Dropbear    : 443, 109" | tee -a /etc/nevermoressh/user.log
 echo -e "Port Dropbear WS : 443, 109" | tee -a /etc/nevermoressh/user.log
+echo -e "Port UDP-Custom  : 1-65535" | tee -a /etc/nevermoressh/user.log
 echo -e "Port SSH WS      : 80 " | tee -a /etc/nevermoressh/user.log
 echo -e "Port SSH SSL WS  : 443" | tee -a /etc/nevermoressh/user.log
 echo -e "Port SSL/TLS     : 443" | tee -a /etc/nevermoressh/user.log
