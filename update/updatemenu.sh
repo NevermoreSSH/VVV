@@ -34,9 +34,10 @@ start=$(date +%s)
 
 echo "0 1 * * * root xp" >> /etc/crontab
 echo "*/2 * * * * root logclean" >> /etc/crontab
-echo "0 3 * * * root /usr/bin/xp" >> /etc/crontab
+echo "0 3 * * * root /usr/sbin/xp" >> /etc/crontab
 echo "0 5 * * * root reboot" >> /etc/crontab
-echo "1 0 * * * root systemctl restart squid" >> /etc/crontab
+echo "1 0 * * * root xp" >> /etc/crontab
+echo "30 0 * * * root /usr/sbin/xp" >> /etc/crontab
 
 # fix missing & update
 apt install htop -y 
