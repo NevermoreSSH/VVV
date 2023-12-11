@@ -12,6 +12,9 @@ read -p "Username : " LOGIN
 read -p "Password : " PASSWD
 read -p "Expired (hari): " EXPIRED
 IP=$(curl -sS ifconfig.me)
+IP=$(curl -s ipinfo.io/ip )
+IP=$(curl -sS ipv4.icanhazip.com)
+IP=$(curl -sS ifconfig.me )
 CITY=$(cat /etc/xray/city)
 PUB=$( cat /etc/slowdns/server.pub )
 NS=`cat /etc/xray/dns`
