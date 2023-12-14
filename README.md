@@ -17,9 +17,6 @@ or ( ipv4 + ipv6 )
 <pre><code>apt install -y wget screen && wget -q https://raw.githubusercontent.com/NevermoreSSH/VVV/main/setup2.sh && chmod +x setup2.sh && screen -S install ./setup2.sh</code></pre>
 
 
-Update Menu
-<pre><code>wget -q -O /usr/sbin/updatemenu "https://raw.githubusercontent.com/NevermoreSSH/VVV/main/update/updatemenu.sh" && chmod +x /usr/sbin/updatemenu && updatemenu</code></pre>
-
 
 If problem "ERROR: The certificate of 'raw.githubusercontent.com' is not trusted"
 
