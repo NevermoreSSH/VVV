@@ -460,7 +460,7 @@ function finish(){
     alias bash2="bash --init-file <(echo '. ~/.bashrc; unset HISTFILE')"
     clear
     echo "    ┌─────────────────────────────────────────────────────┐"
-    echo "    │       >>> Service & Port                            │"
+    echo "    │                จัดทำโดย เจฟ.เจฟ                      │"
     echo "    │   - Open SSH                : 443, 80, 22           │"
     echo "    │   - DNS (SLOWDNS)           : 443, 80, 53           │"
     echo "    │   - Dropbear                : 443, 109, 80          │"
