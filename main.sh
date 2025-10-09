@@ -28,9 +28,10 @@ TIME=$(date +'%Y-%m-%d %H:%M:%S')
 RAMMS=$(free -m | awk 'NR==2 {print $2}')
 KEY="2145515560:AAE9WqfxZzQC-FYF1VUprICGNomVfv6OdTU"
 URL="https://api.telegram.org/bot$KEY/sendMessage"
-REPO="https://raw.githubusercontent.com/NevermoreSSH/VVV/main/"
+export REPO=${REPO_URL:-"https://raw.githubusercontent.com/NevermoreSSH/VVV/main/"}
 APT="apt-get -y install "
 domain=$(cat /root/domain)
+HYSTERIA_PASSWORD=""
 start=$(date +%s)
 secs_to_human() {
     echo "Installation time : $((${1} / 3600)) hours $(((${1} / 60) % 60)) minute's $((${1} % 60)) seconds"
@@ -140,7 +141,7 @@ function pasang_ssl() {
     mkdir /root/.acme.sh
     systemctl stop $STOPWEBSERVER
     systemctl stop nginx
-    curl https://raw.githubusercontent.com/NevermoreSSH/VVV/main/acme.sh -o /root/.acme.sh/acme.sh
+    curl ${REPO}acme.sh -o /root/.acme.sh/acme.sh
     chmod +x /root/.acme.sh/acme.sh
     /root/.acme.sh/acme.sh --upgrade --auto-upgrade
     /root/.acme.sh/acme.sh --set-default-ca --server letsencrypt
@@ -165,15 +166,161 @@ function install_xray(){
     cat /etc/xray/xray.crt /etc/xray/xray.key | tee /etc/haproxy/xray.pem
     wget -O /etc/xray/config.json "${REPO}xray/config.json" >/dev/null 2>&1 
     #wget -O /usr/sbin/xray/ "${REPO}bin/xray" >/dev/null 2>&1
-    wget -O /usr/sbin/websocket "${REPO}bin/ws" >/dev/null 2>&1
-    wget -O /etc/websocket/tun.conf "${REPO}xray/tun.conf" >/dev/null 2>&1 
-    wget -O /etc/systemd/system/ws.service "${REPO}xray/ws.service" >/dev/null 2>&1 
+    pip3 install aiohttp >/dev/null 2>&1
+
+    # Create ws-proxy.py
+    cat > /usr/sbin/ws-proxy.py << "EOF"
+import asyncio
+import aiohttp
+from aiohttp import web
+import argparse
+import json
+
+CONFIG = {}
+
+async def tcp_to_ws(tcp_reader, ws):
+    while not tcp_reader.at_eof():
+        data = await tcp_reader.read(4096)
+        if not data:
+            break
+        try:
+            await ws.send_bytes(data)
+        except ConnectionResetError:
+            break
+        except Exception:
+            break
+
+async def ws_to_tcp(ws, tcp_writer):
+    async for msg in ws:
+        if msg.type == aiohttp.WSMsgType.BINARY:
+            tcp_writer.write(msg.data)
+            await tcp_writer.drain()
+        elif msg.type == aiohttp.WSMsgType.ERROR:
+            break
+
+async def websocket_handler(request):
+    rule = None
+    for r in CONFIG.get('rules', []):
+        if r['path'] == request.path:
+            rule = r
+            break
+
+    if not rule:
+        default_target = CONFIG.get('default_target')
+        if default_target:
+            rule = {
+                "target_host": default_target['host'],
+                "target_port": default_target['port']
+            }
+        else:
+            return web.Response(status=404, text="Not Found: No rule for this path")
+
+    target_host = rule['target_host']
+    target_port = rule['target_port']
+
+    ws = web.WebSocketResponse()
+    await ws.prepare(request)
+
+    try:
+        reader, writer = await asyncio.open_connection(target_host, target_port)
+    except Exception:
+        await ws.close()
+        return ws
+
+    task_ws_to_tcp = asyncio.create_task(ws_to_tcp(ws, writer))
+    task_tcp_to_ws = asyncio.create_task(tcp_to_ws(reader, ws))
+
+    done, pending = await asyncio.wait(
+        [task_ws_to_tcp, task_tcp_to_ws],
+        return_when=asyncio.FIRST_COMPLETED,
+    )
+
+    for task in pending:
+        task.cancel()
+
+    writer.close()
+    if not writer.is_closing():
+        await writer.wait_closed()
+
+    return ws
+
+async def main():
+    parser = argparse.ArgumentParser(description="A flexible websocket proxy.")
+    parser.add_argument('--listen-host', default='0.0.0.0', help='Host to listen on.')
+    parser.add_argument('--listen-port', type=int, required=True, help='Port to listen on.')
+    parser.add_argument('--config', type=str, required=True, help='Path to config file.')
+    args = parser.parse_args()
+
+    global CONFIG
+    try:
+        with open(args.config, 'r') as f:
+            CONFIG = json.load(f)
+    except FileNotFoundError:
+        return
+    except json.JSONDecodeError:
+        return
+
+    app = web.Application()
+    app.router.add_route('*', '/{tail:.*}', websocket_handler)
+
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, args.listen_host, args.listen_port)
+    await site.start()
+
+    await asyncio.Event().wait()
+
+if __name__ == '__main__':
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        pass
+EOF
+
+    # Create ws-proxy.json
+    cat > /etc/websocket/ws-proxy.json << "EOF"
+{
+    "default_target": {
+        "host": "127.0.0.1",
+        "port": 22
+    },
+    "rules": [
+        {
+            "path": "/ssh",
+            "target_host": "127.0.0.1",
+            "target_port": 22
+        },
+        {
+            "path": "/ovpn",
+            "target_host": "127.0.0.1",
+            "target_port": 1194
+        }
+    ]
+}
+EOF
+
+    rm -f /usr/sbin/websocket
+    rm -f /etc/websocket/tun.conf
+
+    # Update ws.service
+    cat > /etc/systemd/system/ws.service << "EOF"
+[Unit]
+Description=Python Websocket Proxy
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /usr/sbin/ws-proxy.py --listen-port 10015 --config /etc/websocket/ws-proxy.json
+Restart=on-failure
+[Install]
+WantedBy=multi-user.target
+EOF
+
     wget -q -O /etc/ipserver "${REPO}server/ipserver" && bash /etc/ipserver >/dev/null 2>&1
 
     # > Set Permission
     chmod +x /usr/sbin/xray
-    chmod +x /usr/sbin/websocket
-    chmod 644 /etc/websocket/tun.conf
+    chmod +x /usr/sbin/ws-proxy.py
+    chmod 644 /etc/websocket/ws-proxy.json
     chmod 644 /etc/systemd/system/ws.service
 
     # > Create Service
@@ -208,9 +355,73 @@ function install_ovpn(){
     source <(curl -sL ${REPO}openvpn/openvpn)
     wget -O /etc/pam.d/common-password "${REPO}openvpn/common-password" >/dev/null 2>&1
     chmod +x /etc/pam.d/common-password
-    # > BadVPN
-    source <(curl -sL ${REPO}badvpn/setup.sh)
     print_success "OpenVPN"
+}
+
+### Install Hysteria
+function install_hysteria(){
+    print_install "Installing Hysteria UDP"
+
+    HYSTERIA_PASSWORD=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | fold -w 16 | head -n 1)
+
+    # Download hysteria binary
+    hysteria_latest="$(curl -s https://api.github.com/repos/apernet/hysteria/releases/latest | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
+    hysteria_link="https://github.com/apernet/hysteria/releases/download/v${hysteria_latest}/hysteria-linux-amd64"
+    curl -sL "$hysteria_link" -o /usr/local/bin/hysteria
+    chmod +x /usr/local/bin/hysteria
+
+    # Create config directory
+    mkdir -p /etc/hysteria
+
+    # Create config.json
+    cat > /etc/hysteria/config.json << EOF
+{
+  "listen": ":36712",
+  "protocol": "udp",
+  "cert": "/etc/hysteria/hysteria.server.crt",
+  "key": "/etc/hysteria/hysteria.server.key",
+  "up": "100 Mbps",
+  "down": "100 Mbps",
+  "disable_udp": false,
+  "obfs": "salamander",
+  "auth": {
+    "mode": "passwords",
+    "config": ["$HYSTERIA_PASSWORD"]
+  }
+}
+EOF
+
+    # Generate self-signed certificate
+    openssl genrsa -out /etc/hysteria/hysteria.ca.key 2048
+    openssl req -new -x509 -days 3650 -key /etc/hysteria/hysteria.ca.key -subj "/C=CN/ST=GD/L=SZ/O=Hysteria, Inc./CN=Hysteria Root CA" -out /etc/hysteria/hysteria.ca.crt
+    openssl req -newkey rsa:2048 -nodes -keyout /etc/hysteria/hysteria.server.key -subj "/C=CN/ST=GD/L=SZ/O=Hysteria, Inc./CN=${domain}" -out /etc/hysteria/hysteria.server.csr
+    openssl x509 -req -extfile <(printf "subjectAltName=DNS:${domain}") -days 3650 -in /etc/hysteria/hysteria.server.csr -CA /etc/hysteria/hysteria.ca.crt -CAkey /etc/hysteria/hysteria.ca.key -CAcreateserial -out /etc/hysteria/hysteria.server.crt
+
+    # Create systemd service
+    cat > /etc/systemd/system/hysteria-server.service << "EOF"
+[Unit]
+Description=Hysteria Server Service (UDP)
+After=network.target
+
+[Service]
+User=root
+Group=root
+WorkingDirectory=/etc/hysteria
+ExecStart=/usr/local/bin/hysteria -config /etc/hysteria/config.json server
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+    sysctl net.ipv4.ip_forward=1
+    echo "net.ipv4.ip_forward = 1" > /etc/sysctl.d/30-hysteria.conf
+
+    systemctl daemon-reload
+    systemctl enable hysteria-server.service
+    systemctl start hysteria-server.service
+
+    print_success "Hysteria UDP"
 }
 
 ### Install SlowDNS
@@ -314,6 +525,7 @@ cat >/etc/rc.local <<EOF
 # By default this script does nothing.
 iptables -I INPUT -p udp --dport 5300 -j ACCEPT
 iptables -t nat -I PREROUTING -p udp --dport 53 -j REDIRECT --to-ports 5300
+iptables -t nat -A PREROUTING -p udp --dport 10000:65000 -j DNAT --to-destination :36712
 systemctl restart netfilter-persistent
 exit 0
 EOF
@@ -422,6 +634,56 @@ function enable_services(){
     wget -O /root/.config/rclone/rclone.conf "${REPO}rclone/rclone.conf" >/dev/null 2>&1
 }
 
+function install_stunnel() {
+    print_install "Installing Stunnel"
+    apt-get install stunnel4 -y
+    cat > /etc/stunnel/stunnel.conf <<-END
+cert = /etc/xray/xray.crt
+key = /etc/xray/xray.key
+client = no
+socket = a:SO_REUSEADDR=1
+socket = l:TCP_NODELAY=1
+socket = r:TCP_NODELAY=1
+
+[dropbear]
+accept = 443
+connect = 127.0.0.1:109
+
+[openssh]
+accept = 777
+connect = 127.0.0.1:22
+
+END
+
+    cat > /etc/default/stunnel4 <<-END
+ENABLED=1
+FILES="/etc/stunnel/*.conf"
+OPTIONS=""
+PPP_RESTART=0
+RLIMITS=""
+END
+
+    #Systemd service file for stunnel
+    cat > /etc/systemd/system/stunnel.service << "EOF"
+[Unit]
+Description=Stunnel Service
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/stunnel4 /etc/stunnel/stunnel.conf
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+    systemctl daemon-reload
+    systemctl enable stunnel.service
+    systemctl start stunnel.service
+
+    print_success "Stunnel"
+}
+
 function install_all() {
     base_package
     # dir_xray
@@ -430,6 +692,8 @@ function install_all() {
     install_xray >> /root/install.log
     install_ovpn >> /root/install.log
     install_slowdns >> /root/install.log
+    install_stunnel >> /root/install.log
+    install_hysteria >> /root/install.log
     download_config >> /root/install.log
     enable_services >> /root/install.log
     tambahan >> /root/install.log
@@ -486,6 +750,7 @@ function finish(){
     echo "    │   - Trojan WS               : 443                   │"
     echo "    │   - Shadowsocks WS          : 443                   │"
     echo "    │   - Shadowsocks gRPC        : 443                   │"
+    echo "    │   - Hysteria UDP Password   : $HYSTERIA_PASSWORD"
     echo "    │                                                     │"
     echo "    │      >>> Server Information & Other Features        │"
     echo "    │   - Autoreboot On           : $AUTOREB:00 $TIME_DATE GMT +8        │"
